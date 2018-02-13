@@ -5,7 +5,7 @@ using UnityEngine;
 public class GameManager : MonoBehaviour {
 
 	[SerializeField]
-	private BubbleSpawner spawner;
+	private Spawner spawner;
 
 	private void Awake() {
 		if (!spawner) {
