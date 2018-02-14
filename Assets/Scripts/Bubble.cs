@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class Bubble : MonoBehaviour, SpawnableObject {
 
@@ -34,6 +32,10 @@ public class Bubble : MonoBehaviour, SpawnableObject {
 		gameObject.transform.Translate(Vector2.up * speed * Time.deltaTime);
 	}
 
+	void OnBecameInvisible() {
+        Destroy(gameObject);
+    }
+
 	public void Init() {
 		// Set random size
 		float scale = Random.Range(minSize, maxSize);
@@ -49,6 +51,19 @@ public class Bubble : MonoBehaviour, SpawnableObject {
 		// Set random color
 		Color color = Random.ColorHSV(0f, 1f, 0f, 1f, 0.8f, 1f, 1f, 1f);
 		spriteRenderer.color = color;
+	}
+
+	public Vector2 CalculatePosition() {
+		float spriteRadius = spriteRenderer.bounds.size.x / 2;
+		Vector2 leftBottomLimit = Camera.main.ScreenToWorldPoint( new Vector2(0, 0) );
+		Vector2 rightBottomLimit = Camera.main.ScreenToWorldPoint( new Vector2(Screen.width, 0) );
+
+		float leftPosLimit = leftBottomLimit.x + spriteRadius;
+		float rightPosLimit = rightBottomLimit.x - spriteRadius;
+		float topPosLimit = leftBottomLimit.y - spriteRadius;
+		Vector2 position = new Vector2(Random.Range(leftPosLimit, rightPosLimit), topPosLimit);
+
+		return position;
 	}
 
 	public int Pop() {

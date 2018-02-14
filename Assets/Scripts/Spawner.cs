@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class Spawner : MonoBehaviour {
 
@@ -15,7 +13,7 @@ public class Spawner : MonoBehaviour {
 
 	private void Awake() {
 		if (!spawnPrefab) {
-			Debug.LogError("You've forgotten to assign spawnPrefab parameter to Spawner script");
+			Debug.LogError("You've forgotten to assign spawnObject parameter to Spawner script");
 		}
 	}
 
@@ -32,17 +30,17 @@ public class Spawner : MonoBehaviour {
 	}
 
 	public void SpawnPrefab() {
-		Vector2 position = Camera.main.ScreenToWorldPoint( new Vector2(Random.Range(0, Screen.width), 0) );
-
-		GameObject go = Instantiate(spawnPrefab, position, Quaternion.identity);
-		go.transform.parent = gameObject.transform;
+		GameObject go = Instantiate(spawnPrefab);
 
 		SpawnableObject so = go.GetComponent<SpawnableObject>();
 		if (so == null) {
-			Debug.LogError("spawnPrefab should have a component inherited from SpawnableObject");
+			Debug.LogError("spawnPrefab should have a component that implement SpawnableObject");
 			return;
 		}
 		so.Init();
+
+		go.transform.position = so.CalculatePosition();
+		go.transform.parent = gameObject.transform;
 
 		spawnTimer.StartTimer( GetRandomTime() );
 	}
