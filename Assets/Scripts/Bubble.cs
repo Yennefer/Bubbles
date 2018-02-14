@@ -5,15 +5,20 @@ using UnityEngine;
 public class Bubble : MonoBehaviour, SpawnableObject {
 
 	[SerializeField]
-	private float speed = 0.5F;
+	private float minSize = 1F;
 	[SerializeField]
-	private int costMultiplier = 10;
+	private float maxSize = 5f;
 	[SerializeField]
-	private float minSize = 1;
+	private float minSpeed = 0.5F;
 	[SerializeField]
-	private float maxSize = 5;
+	private float maxSpeed = 1f;
+	[SerializeField]
+	private int minCost = 1;
+	[SerializeField]
+	private int maxCost = 10;
 
 	private float size;
+	private float speed;
 	private int cost;
 	private SpriteRenderer spriteRenderer;
 		
@@ -30,10 +35,19 @@ public class Bubble : MonoBehaviour, SpawnableObject {
 	}
 
 	public void Init() {
+		// Set random size
 		float scale = Random.Range(minSize, maxSize);
 		gameObject.transform.localScale = new Vector2(scale, scale);
 
-		Color color = Random.ColorHSV(0f, 1f, 1f, 1f, 0.8f, 1f, 1f, 1f);
+		// Calculate multiplier for speed and cost
+		float multiplier = 1 - ((scale - minSize) / (maxSize - minSize));
+
+		// Set speed and cost
+		speed = minSpeed + multiplier * (maxSpeed - minSpeed);
+		cost = (int) System.Math.Round( minCost + multiplier * (maxCost - minCost) );
+
+		// Set random color
+		Color color = Random.ColorHSV(0f, 1f, 0f, 1f, 0.8f, 1f, 1f, 1f);
 		spriteRenderer.color = color;
 	}
 
