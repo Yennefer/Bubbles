@@ -14,14 +14,18 @@ public class Spawner : MonoBehaviour {
 	private void Awake() {
 		if (!spawnPrefab) {
 			Debug.LogError("You've forgotten to assign spawnObject parameter to Spawner script");
+		} else if (spawnPrefab.GetComponent<SpawnableObject>() == null) {
+			Debug.LogError("spawnPrefab should have a component that implement SpawnableObject");
 		}
-	}
 
-	private void Start() {
 		spawnTimer = Timer.AddAsComponent(gameObject, SpawnPrefab);
 	}
 
 	public void StartSpawn () {
+		foreach(Transform child in transform) {
+    		Destroy(child.gameObject);
+		}
+		
 		SpawnPrefab();
 	}
 
@@ -31,12 +35,7 @@ public class Spawner : MonoBehaviour {
 
 	public void SpawnPrefab() {
 		GameObject go = Instantiate(spawnPrefab);
-
 		SpawnableObject so = go.GetComponent<SpawnableObject>();
-		if (so == null) {
-			Debug.LogError("spawnPrefab should have a component that implement SpawnableObject");
-			return;
-		}
 		so.Init();
 
 		go.transform.position = so.CalculatePosition();
