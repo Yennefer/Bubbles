@@ -21,11 +21,11 @@ public class Spawner : MonoBehaviour {
 		spawnTimer = Timer.AddAsComponent(gameObject, SpawnPrefab);
 	}
 
-	public void StartSpawn () {
+	public void StartSpawn() {
 		foreach(Transform child in transform) {
     		Destroy(child.gameObject);
 		}
-		
+
 		SpawnPrefab();
 	}
 

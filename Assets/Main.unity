@@ -166,8 +166,9 @@ GameObject:
   m_Component:
   - component: {fileID: 1241305747}
   - component: {fileID: 1241305745}
+  - component: {fileID: 1241305746}
   m_Layer: 0
-  m_Name: GameManager
+  m_Name: Managers
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -185,8 +186,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   spawner: {fileID: 1005523641}
-  gameDurationInSec: 30
-  speedAccelerationFactor: 10
+--- !u!114 &1241305746
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1241305744}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5ccf14937d54fab489e207a736d3676c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gameDurationInSec: 60
+  speedAccelerationFactor: 0.1
 --- !u!4 &1241305747
 Transform:
   m_ObjectHideFlags: 0

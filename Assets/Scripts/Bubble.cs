@@ -28,7 +28,7 @@ public class Bubble : MonoBehaviour, SpawnableObject {
 		}
 	}
 
-	private void Update () {
+	private void Update() {
 		gameObject.transform.Translate(Vector2.up * speed * Time.deltaTime);
 	}
 
@@ -45,7 +45,7 @@ public class Bubble : MonoBehaviour, SpawnableObject {
 		float multiplier = 1 - ((scale - minSize) / (maxSize - minSize));
 
 		// Set speed and cost
-		speed = minSpeed + multiplier * (maxSpeed - minSpeed);
+		speed = minSpeed + multiplier * (maxSpeed - minSpeed) + TimeManager.instance.speedAcceleration;
 		cost = (int) System.Math.Round( minCost + multiplier * (maxCost - minCost) );
 
 		// Set random color

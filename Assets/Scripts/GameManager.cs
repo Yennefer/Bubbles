@@ -4,22 +4,28 @@ public class GameManager : MonoBehaviour {
 
 	[SerializeField]
 	private Spawner spawner;
-	[SerializeField]
-	private int gameDurationInSec = 60;
-	[SerializeField]
-	private int speedAccelerationFactor = 10;
 
-	private Timer gameTimer;
+	private static GameManager gameManager;
+	private static GameManager instance {
+		get {
+			if (gameManager == null) {
+				gameManager = FindObjectOfType<GameManager>();
+
+				if (gameManager == null) {
+					Debug.LogError ("There needs to be one GameManager script on a GameObject in scene");
+				}
+			}
+			return gameManager;
+		}
+	}
 
 	private void Awake() {
 		if (!spawner) {
 			Debug.LogError("You've forgotten to assign spawner parameter to GameManager script");
 		}
-
-		gameTimer = Timer.AddAsComponent(gameObject, EndGame);
 	}
 
-	private void Start () {
+	private void Start() {
 		StartGame();
 	}
 
@@ -38,12 +44,15 @@ public class GameManager : MonoBehaviour {
 	}
 
 	private void StartGame() {
-		gameTimer.StartTimer(gameDurationInSec);
+		TimeManager.instance.StartGameTime(SecondUpdate, FinishGame);
 		spawner.StartSpawn();
 	}
 
-	private void EndGame() {
+	private void SecondUpdate() {
+
+	}
+
+	private void FinishGame() {
 		spawner.StopSpawn();
-		gameTimer.StopTimer();
 	}
 }
