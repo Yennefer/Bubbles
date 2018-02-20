@@ -10,6 +10,7 @@ public class TimeManager : MonoBehaviour {
 
 	private static TimeManager instance;
 
+	private int gameDurationLeft = 0;
 	private float speedAcceleration = 0F;
 	private bool gamePlaying = false;
 	private float timeLeft = 1F;
@@ -45,12 +46,15 @@ public class TimeManager : MonoBehaviour {
 
 	private void TimerUpdate() {
 		speedAcceleration += speedAccelerationFactor;
+		gameDurationLeft--;
 		timerUpdateCallback.Invoke();
 	}
 
 	private void StartTimeManagment(UnityAction timerUpdateCallback, UnityAction endGameCallback) {
 		this.endGameCallback = endGameCallback;
 		this.timerUpdateCallback = timerUpdateCallback;
+		gameDurationLeft = gameDurationInSec;
+		speedAcceleration = 0F;
 		gameTimer.StartTimer(gameDurationInSec);
 		gamePlaying = true;
 	}
@@ -61,5 +65,9 @@ public class TimeManager : MonoBehaviour {
 	
 	public static float GetSpeedAcceleration() {
 		return instance.speedAcceleration;
+	}
+
+	public static int GetGameTimeLeft() {
+		return instance.gameDurationLeft;
 	}
 }

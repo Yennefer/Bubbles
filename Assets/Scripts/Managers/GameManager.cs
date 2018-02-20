@@ -45,6 +45,7 @@ public class GameManager : MonoBehaviour {
 
 		TimeManager.StartGame(TimerUpdate, EndGame);
 		GUIManager.StartGame(StartGame);
+		GUIManager.UpdateTimer(TimeManager.GetGameTimeLeft());
 
 		spawner.StartSpawn();
 	}
@@ -54,7 +55,7 @@ public class GameManager : MonoBehaviour {
 	}
 
 	private void TimerUpdate() {
-		GUIManager.UpdateTimer();
+		GUIManager.UpdateTimer(TimeManager.GetGameTimeLeft());
 	}
 
 	private void PointsUpdate() {
