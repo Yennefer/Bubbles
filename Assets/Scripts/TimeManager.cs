@@ -3,63 +3,63 @@ using UnityEngine.Events;
 
 public class TimeManager : MonoBehaviour {
 
-	private static TimeManager timeManager;
-	public static TimeManager instance {
-		get {
-			if (timeManager == null) {
-				timeManager = FindObjectOfType<TimeManager>();
-
-				if (timeManager == null) {
-					Debug.LogError ("There needs to be one TimeManager script on a GameObject in scene");
-				}
-			}
-			return timeManager;
-		}
-	}
-
 	[SerializeField]
 	private int gameDurationInSec = 60;
 	[SerializeField]
 	private float speedAccelerationFactor = 0.2F;
 
-	private float _speedAcceleration = 0F;
-	private bool gamePLaying = false;
+	private static TimeManager instance;
+
+	private float speedAcceleration = 0F;
+	private bool gamePlaying = false;
 	private float timeLeft = 1F;
 	private Timer gameTimer;
-	private UnityAction timeRanOutCallback;
-	private UnityAction secondPassedCallback;
-
-	public float speedAcceleration { get { return _speedAcceleration; } }
+	private UnityAction endGameCallback;
+	private UnityAction timerUpdateCallback;
 
 	private void Awake() {
-		gameTimer = Timer.AddAsComponent(gameObject, TimeRanOut);
+		gameTimer = Timer.AddAsComponent(gameObject, EndGame);
+
+		if (instance == null) {
+            instance = this;
+        } else if (instance != this) {
+            Destroy(gameObject);
+        }
 	}
 
 	private void Update() {
-		if (gamePLaying) {
+		if (gamePlaying) {
 			timeLeft -= Time.deltaTime;
     		if (timeLeft <= 0) {
-    			SecondPassed();
+    			TimerUpdate();
 				timeLeft = 1F;
     		}
 		}
 	}
 
-	public void StartGameTime(UnityAction secondPassedCallback, UnityAction timeRanOutCallback) {
-		this.timeRanOutCallback = timeRanOutCallback;
-		this.secondPassedCallback = secondPassedCallback;
-		gameTimer.StartTimer(gameDurationInSec);
-		gamePLaying = true;
-	}
-	
-	public void TimeRanOut() {
-		gamePLaying = false;
+	private void EndGame() {
+		gamePlaying = false;
 		gameTimer.StopTimer();
-		timeRanOutCallback.Invoke();
+		endGameCallback.Invoke();
 	}
 
-	public void SecondPassed() {
-		_speedAcceleration += speedAccelerationFactor;
-		secondPassedCallback.Invoke();
+	private void TimerUpdate() {
+		speedAcceleration += speedAccelerationFactor;
+		timerUpdateCallback.Invoke();
+	}
+
+	private void StartTimeManagment(UnityAction timerUpdateCallback, UnityAction endGameCallback) {
+		this.endGameCallback = endGameCallback;
+		this.timerUpdateCallback = timerUpdateCallback;
+		gameTimer.StartTimer(gameDurationInSec);
+		gamePlaying = true;
+	}
+
+	public static void StartGame(UnityAction timerUpdateCallback, UnityAction endGameCallback) {
+		instance.StartTimeManagment(timerUpdateCallback, endGameCallback);
+	}
+	
+	public static float GetSpeedAcceleration() {
+		return instance.speedAcceleration;
 	}
 }

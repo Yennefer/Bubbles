@@ -5,7 +5,16 @@ public class GameManager : MonoBehaviour {
 	[SerializeField]
 	private Spawner spawner;
 
-	private int points = 0;
+	private int _points = 0;
+	private int points {
+		get {
+			return _points;
+		}
+		set {
+			_points = value;
+			PointsUpdate();
+		}
+	}
 
 	private void Awake() {
 		if (!spawner) {
@@ -22,28 +31,39 @@ public class GameManager : MonoBehaviour {
 			RaycastHit2D hit = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector2.zero);
 
 			if (hit.collider) {
-				SpawnableObject so = hit.collider.gameObject.GetComponent<SpawnableObject>();
+				Bubble bubble = hit.collider.gameObject.GetComponent<Bubble>();
 
-				if (so != null) {
-    				points += so.Pop();
+				if (bubble != null) {
+    				points += bubble.Pop();
 				}
 			}
 		}
 	}
 
 	private void StartGame() {
-		points = 0;
-		TimeManager.instance.StartGameTime(SecondUpdate, FinishGame);
-		GUIManager.instance.StartGame(StartGame);
+		InitGame();
+
+		TimeManager.StartGame(TimerUpdate, EndGame);
+		GUIManager.StartGame(StartGame);
+
 		spawner.StartSpawn();
 	}
 
-	private void SecondUpdate() {
-
+	private void InitGame() {
+		points = 0;
 	}
 
-	private void FinishGame() {
+	private void TimerUpdate() {
+		GUIManager.UpdateTimer();
+	}
+
+	private void PointsUpdate() {
+		GUIManager.UpdatePoints(points);
+	}
+
+	private void EndGame() {
 		spawner.StopSpawn();
-		GUIManager.instance.EndGame(points);
+
+		GUIManager.EndGame(points);
 	}
 }

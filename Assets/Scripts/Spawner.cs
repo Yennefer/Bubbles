@@ -3,7 +3,7 @@
 public class Spawner : MonoBehaviour {
 
 	[SerializeField]
-	private GameObject spawnPrefab;
+	private GameObject bubblePrefab;
 	[SerializeField]
 	private float minSpawnTime = 0.3F;
 	[SerializeField]
@@ -12,39 +12,41 @@ public class Spawner : MonoBehaviour {
 	private Timer spawnTimer;
 
 	private void Awake() {
-		if (!spawnPrefab) {
-			Debug.LogError("You've forgotten to assign spawnObject parameter to Spawner script");
-		} else if (spawnPrefab.GetComponent<SpawnableObject>() == null) {
-			Debug.LogError("spawnPrefab should have a component that implement SpawnableObject");
+		if (!bubblePrefab) {
+			Debug.LogError("You've forgotten to assign bubblePrefab parameter to Spawner script");
+		} else if (bubblePrefab.GetComponent<Bubble>() == null) {
+			Debug.LogError("bubblePrefab should have a Bubble component");
 		}
 
-		spawnTimer = Timer.AddAsComponent(gameObject, SpawnPrefab);
+		spawnTimer = Timer.AddAsComponent(gameObject, SpawnBubble);
 	}
 
 	public void StartSpawn() {
-		foreach(Transform child in transform) {
-    		Destroy(child.gameObject);
-		}
-
-		SpawnPrefab();
+		SpawnBubble();
 	}
 
 	public void StopSpawn() {
 		spawnTimer.StopTimer();
+		ClearSpawnedBubbles();
 	}
 
-	public void SpawnPrefab() {
-		GameObject go = Instantiate(spawnPrefab);
-		SpawnableObject so = go.GetComponent<SpawnableObject>();
-		so.Init();
+	public void SpawnBubble() {
+		Bubble bubble = Instantiate(bubblePrefab).GetComponent<Bubble>();
+		bubble.Init();
 
-		go.transform.position = so.CalculatePosition();
-		go.transform.parent = gameObject.transform;
+		bubble.gameObject.transform.position = bubble.CalculatePosition();
+		bubble.gameObject.transform.parent = this.gameObject.transform;
 
 		spawnTimer.StartTimer( GetRandomTime() );
 	}
 
 	private float GetRandomTime() {
 		return Random.Range(minSpawnTime, maxSpawnTime);
+	}
+
+	private void ClearSpawnedBubbles() {
+		foreach(Transform child in transform) {
+   			Destroy(child.gameObject);
+		}	   
 	}
 }

@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class Bubble : MonoBehaviour, SpawnableObject {
+public class Bubble : MonoBehaviour {
 
 	[SerializeField]
 	private float minSize = 1F;
@@ -45,7 +45,7 @@ public class Bubble : MonoBehaviour, SpawnableObject {
 		float multiplier = 1 - ((scale - minSize) / (maxSize - minSize));
 
 		// Set speed and cost
-		speed = minSpeed + multiplier * (maxSpeed - minSpeed) + TimeManager.instance.speedAcceleration;
+		speed = minSpeed + multiplier * (maxSpeed - minSpeed) + TimeManager.GetSpeedAcceleration();
 		cost = (int) System.Math.Round( minCost + multiplier * (maxCost - minCost) );
 
 		// Set random color

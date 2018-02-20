@@ -459,7 +459,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 42f3a15250afa8549901a2f29de2a357, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spawnPrefab: {fileID: 1721069828411284, guid: ea31d662723952b48b77066138dae10d,
+  bubblePrefab: {fileID: 1721069828411284, guid: ea31d662723952b48b77066138dae10d,
     type: 2}
   minSpawnTime: 0.3
   maxSpawnTime: 1
