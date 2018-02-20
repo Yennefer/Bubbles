@@ -5,19 +5,7 @@ public class GameManager : MonoBehaviour {
 	[SerializeField]
 	private Spawner spawner;
 
-	private static GameManager gameManager;
-	private static GameManager instance {
-		get {
-			if (gameManager == null) {
-				gameManager = FindObjectOfType<GameManager>();
-
-				if (gameManager == null) {
-					Debug.LogError ("There needs to be one GameManager script on a GameObject in scene");
-				}
-			}
-			return gameManager;
-		}
-	}
+	private int points = 0;
 
 	private void Awake() {
 		if (!spawner) {
@@ -37,14 +25,16 @@ public class GameManager : MonoBehaviour {
 				SpawnableObject so = hit.collider.gameObject.GetComponent<SpawnableObject>();
 
 				if (so != null) {
-    				Debug.Log("I get " + so.Pop() + " points");
+    				points += so.Pop();
 				}
 			}
 		}
 	}
 
 	private void StartGame() {
+		points = 0;
 		TimeManager.instance.StartGameTime(SecondUpdate, FinishGame);
+		GUIManager.instance.StartGame(StartGame);
 		spawner.StartSpawn();
 	}
 
@@ -54,5 +44,6 @@ public class GameManager : MonoBehaviour {
 
 	private void FinishGame() {
 		spawner.StopSpawn();
+		GUIManager.instance.EndGame(points);
 	}
 }
